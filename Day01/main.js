@@ -44,13 +44,7 @@ const part2 = (input) => {
         const leftDistance = distance % NUMBER_OF_CLICK;
         const distanceToZero = side > 0 ? dialPosition : (NUMBER_OF_CLICK - dialPosition) % NUMBER_OF_CLICK;
 
-        if (distanceToZero > 0 && distanceToZero < leftDistance) {
-            numberOfZero++;
-        }
-
-        // console.log('Dial position ', dialPosition);
-
-        if (dialPosition === 0) {
+        if (dialPosition === 0 || (distanceToZero > 0 && distanceToZero < leftDistance)) {
             numberOfZero++;
         }
 
