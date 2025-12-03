@@ -30,17 +30,42 @@ function part2(input) {
     for(const range of rangeIDs) {
         const [start, end] = range.split('-').map(Number);
         
-        // brute force approach
+        // brute force approach ~ 26sec
+        // for(let i=start; i<=end; i++) {
+        //     const str = i.toString();
+        //     let search = str[0];
+        //     for(let j=0; j<str.length; j++) {
+        //         const re = new RegExp(String.raw`${search}`, "g");
+        //         if(str.match(re).length > 1 && str.replace(re, "").length === 0) {
+        //             result += i;
+        //             break;
+        //         }
+        //         search += str[j+1];
+        //     }
+        // }
+
+        // better approach ~0.2sec
         for(let i=start; i<=end; i++) {
             const str = i.toString();
-            let search = str[0];
-            for(let j=0; j<str.length; j++) {
-                const re = new RegExp(String.raw`${search}`, "g");
-                if(str.match(re).length > 1 && str.replace(re, "").length === 0) {
-                    result += i;
-                    break;
+            if(str.length < 2) continue;
+            if(Array.from(str).every(x => x === str[0])) {
+                result += i;
+                continue;
+            }
+
+            for(let j=2; j <= str.length/2; j++) {
+                if(str.length % j !== 0) continue;
+
+                const chunkLength = str.length / j;
+                let chunks = [];
+                for(let k=0; k < j; k++) {
+                    chunks.push(str.substring(k*chunkLength, (k+1)*chunkLength));
                 }
-                search += str[j+1];
+
+                if(chunks.every(c => c === chunks[0])){
+                    result +=i;
+                    continue;
+                }
             }
         }
     }
@@ -51,7 +76,7 @@ function part2(input) {
 const exampleInput = fs.readFileSync('Day02/example.txt', 'utf-8');
 
 // console.assert(part1(exampleInput) === 1227775554, 'Part 1 assertion failed');
-// console.assert(part2(exampleInput) === 4174379265, 'Part 2 assertion failed');
+console.assert(part2(exampleInput) === 4174379265, 'Part 2 assertion failed');
 
 const puzzleInput = fs.readFileSync('Day02/puzzle.txt', 'utf-8');
 
